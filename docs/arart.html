@@ -27,6 +27,7 @@ body { margin: 0; overflow: hidden; }
   overflow-y: auto;
   padding: 10px;
   z-index: 2;
+  display: block;
 }
 .gallery-image {
   width: 100%;
@@ -49,6 +50,16 @@ body { margin: 0; overflow: hidden; }
 </a-scene>
 <script>
 const gallery = document.getElementById('gallery');
+document.body.onclick = () => {
+  console.log("click, showing gallery");
+  gallery.style.display = "block";
+}
+
+const hideGallery = () => {
+  console.log("click, hiding gallery")
+  gallery.style.display = "none";
+}
+
 const overlay = document.getElementById('overlay');
 fetch('images.json')
   .then(response => response.json())
@@ -59,6 +70,8 @@ fetch('images.json')
       img.classList.add('gallery-image');
       img.onclick = () => {
         console.log("click, adding " + image.url)
+        event.stopPropagation();
+        hideGallery();
         overlay.innerHTML = `<a-image src="${image.url}"></a-image>`;
       };
       gallery.appendChild(img);
