@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Michelle Hénault, artiste peintre</title>
+<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<!-- we import arjs version without NFT but with marker + location based support -->
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<script>
+  AFRAME.registerComponent('markerhandler', {
+    init: function () {
+      this.el.sceneEl.addEventListener('markerFound', () => {
+        // redirect to custom URL
+        console.log("markerFound")
+      });
+  }});
+</script>
+<style>
+body { margin: 0; overflow: hidden; }
+#gallery {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100%;
+  background-color: rgba(255,255,255,0.8);
+  overflow-y: auto;
+  padding: 10px;
+  z-index: 2;
+}
+.gallery-image {
+  width: 100%;
+  margin-bottom: 10px;
+  cursor: pointer;
+  z-index: 3;
+}
+</style>
+</head>
+<body>
+<div id="gallery">
+  </div>
+<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: true;'>
+  <a-marker preset="hiro">
+    <a-entity id="overlay" rotation="-90 0 0">
+        <a-image src="https://static.wixstatic.com/media/0ee442_ca13ed61cd6543b7b738338849178b8c~mv2.jpg/v1/fill/w_521,h_438,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/PXL_20240315_160441620.jpg"></a-image>
+    </a-entity>
+  </a-marker>
+  <a-entity camera></a-entity>
+</a-scene>
+<script>
+const gallery = document.getElementById('gallery');
+const overlay = document.getElementById('overlay');
+fetch('images.json')
+  .then(response => response.json())
+  .then(images => {
+    images.forEach(image => {
+      const img = document.createElement('img');
+      img.src = image.url;
+      img.classList.add('gallery-image');
+      img.onclick = () => {
+        console.log("click, adding " + image.url)
+        overlay.innerHTML = `<a-image src="${image.url}"></a-image>`;
+      };
+      gallery.appendChild(img);
+    });
+  });
+</script>
+</body>
