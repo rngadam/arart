@@ -71,7 +71,9 @@ fetch('images.json')
         console.log("click, adding " + image.url)
         event.stopPropagation();
         hideGallery();
-        overlay.innerHTML = `<a-image src="${image.url}"></a-image>`;
+        width = image.width/8;
+        height = image.height/8;
+        overlay.innerHTML = `<a-image src="${image.url}" width="${width}" height="${height}"></a-image>`;
       };
       gallery.appendChild(img);
     });
