@@ -62,10 +62,6 @@ scene.addEventListener('enter-vr', () => {
 scene.addEventListener('exit-vr', () => {
   console.log('exit-vr');
 });
-window.addEventListener('orientationchange', () => {
-  const isPortrait = window.innerWidth < window.innerHeight;
-  document.getElementById('overlay').setAttribute('rotation', isPortrait ? '-90 0 0' : '0 0 0');
-});
 
 const gallery = document.getElementById('gallery');
 document.body.onclick = () => {
