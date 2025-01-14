@@ -35,6 +35,13 @@ body { margin: 0; overflow: hidden; }
   cursor: pointer;
   z-index: 3;
 }
+#overlay-label {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: white;
+  font-size: 14px;
+}
 </style>
 </head>
 <body>
@@ -48,6 +55,18 @@ body { margin: 0; overflow: hidden; }
   <a-entity camera></a-entity>
 </a-scene>
 <script>
+const scene = document.querySelector('a-scene');
+scene.addEventListener('enter-vr', () => {
+  console.log('enter-vr');
+});
+scene.addEventListener('exit-vr', () => {
+  console.log('exit-vr');
+});
+window.addEventListener('orientationchange', () => {
+  const isPortrait = window.innerWidth < window.innerHeight;
+  document.getElementById('overlay').setAttribute('rotation', isPortrait ? '-90 0 0' : '0 0 0');
+});
+
 const gallery = document.getElementById('gallery');
 document.body.onclick = () => {
   console.log("click, showing gallery");
@@ -68,14 +87,23 @@ fetch('images.json')
       img.src = image.url;
       img.classList.add('gallery-image');
       img.onclick = () => {
-        console.log("click, adding " + image.url)
         event.stopPropagation();
+        const width = image.width/8;
+        const height = image.height/8;
         hideGallery();
-        width = image.width/8;
-        height = image.height/8;
-        overlay.innerHTML = `<a-image src="${image.url}" width="${width}" height="${height}"></a-image>`;
+        overlay.innerHTML = `
+          <a-image src="${image.url}" width="${width}" height="${height}" >
+          </a-image>
+        `;
       };
       gallery.appendChild(img);
+
+      const label = document.createElement('div');
+      label.textContent = `${image.name} (${image.date_signed})`;
+      label.style.fontSize = '12px';
+      label.style.marginBottom = '5px';
+      gallery.appendChild(label);
+
     });
   });
 </script>
